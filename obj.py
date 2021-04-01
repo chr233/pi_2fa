@@ -2,7 +2,7 @@
 # @Author       : Chr_
 # @Date         : 2021-04-01 11:49:31
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-04-02 01:03:52
+# @LastEditTime : 2021-04-02 01:29:52
 # @Description  : 启动入口
 '''
 
@@ -61,7 +61,7 @@ class Pi_2FA(object):
             self.curr_page -= 1
 
     def switch_mode(self):
-        if self.Mode >= 3 or self.Mode <= 0:
+        if self.Mode >= 4 or self.Mode <= 0:
             self.Mode = 1
         else:
             self.Mode += 1
@@ -95,6 +95,8 @@ class Pi_2FA(object):
         elif self.Mode == 2:
             tips = self.weather
         elif self.Mode == 3:
+            tips = ['▲▼: 令牌翻页', '● : 切换模式', '■ : 隐藏令牌']
+        elif self.Mode == 4:
             tips = ['blog.chrxw.com', 'By Chr_', 'Ver 0.0.2']
             
         img = generate_2fa_img(
