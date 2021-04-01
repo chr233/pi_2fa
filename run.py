@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import RPi.GPIO as GPIO
 from obj import Pi_2FA
 
