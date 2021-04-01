@@ -1,0 +1,7 @@
+requests
+lxml
+bs4
+psutil
+RPi.GPIO
+Pillow
+spidev
