@@ -31,8 +31,12 @@ for key in KEYS:
 
 if __name__ == '__main__':
     print('start')
-    while True:
-        if pi_2fa.Ready:
-            pi_2fa.check_time()
-        continue
+    try:
+        while True:
+            if pi_2fa.Ready:
+                pi_2fa.check_time()
+            continue
+    except KeyboardInterrupt:
+        print('end')
+    pi_2fa.EPD.Clear(0xff)  
     GPIO.cleanup()
