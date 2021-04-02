@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+'''
+# @Author       : Chr_
+# @Date         : 2021-03-29 22:40:39
+# @LastEditors  : Chr_
+# @LastEditTime : 2021-04-03 00:27:38
+# @Description  : 启动文件
+'''
 
 import RPi.GPIO as GPIO
 from obj import Pi_2FA
