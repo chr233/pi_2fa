@@ -2,7 +2,7 @@
 # @Author       : Chr_
 # @Date         : 2021-04-01 11:49:31
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-04-02 12:59:35
+# @LastEditTime : 2021-04-02 13:03:38
 # @Description  : 启动入口
 '''
 
@@ -43,22 +43,26 @@ class Pi_2FA(object):
         self.curr_page = 1
 
     def page_up(self):
-        self.Show=True
+        if self.Show:
+            if self.curr_page >= self.page_count:
+                self.curr_page = 1
+            else:
+                self.curr_page += 1
+        else:
+            self.Show=True
         self.count_2fa =3
         self.Minute = -1
-        if self.curr_page >= self.page_count:
-            self.curr_page = 1
-        else:
-            self.curr_page += 1
 
     def page_down(self):
-        self.Show=True
+        if self.Show :
+            if self.curr_page <= 1:
+                self.curr_page = self.page_count
+            else:
+                self.curr_page -= 1
+        else:
+            self.Show=True
         self.count_2fa =3
         self.Minute = -1
-        if self.curr_page <= 1:
-            self.curr_page = self.page_count
-        else:
-            self.curr_page -= 1
 
     def switch_mode(self):
         if self.Mode >= 4 or self.Mode <= 0:
