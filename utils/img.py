@@ -2,7 +2,7 @@
 # @Author       : Chr_
 # @Date         : 2021-03-30 17:04:24
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-04-02 01:02:51
+# @LastEditTime : 2021-04-03 00:26:15
 # @Description  : 图片生成器
 '''
 
@@ -75,7 +75,7 @@ def generate_2fa_img(data: List[Tuple[str, str]], page: Tuple[int, int] = (1, 1)
             # 画名称
             im_name = Image.new('L', (W2, H2), 0xff)
             draw_name = ImageDraw.Draw(im_name)
-            draw_name.text(((W2-w2)/2, (H2-h2)/2-1),
+            draw_name.text(((W2-w2)/2, (H2-h2)/2-2),
                            name[:3], font=FONT_TAG, fill=0x00)
             draw_name.line(((0, 0), (W2, 0)), fill=0x00, width=1)
             im_name = im_name.rotate(angle=90, expand=True)
@@ -145,10 +145,10 @@ def generate_2fa_img(data: List[Tuple[str, str]], page: Tuple[int, int] = (1, 1)
         return img
 
     if not active:
-        data = [('---', '------')] * 6
+        data = [('---', '-----')] * 6
 
     if len(data) < 6:
-        data += [('---', '------')] * 6
+        data += [('---', '-----')] * 6
 
     if not tips:
         tips = ['By Chr_', 'Ver 0.01', 'chrxw.com']
