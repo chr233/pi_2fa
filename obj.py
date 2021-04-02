@@ -2,7 +2,7 @@
 # @Author       : Chr_
 # @Date         : 2021-04-01 11:49:31
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-04-02 01:29:52
+# @LastEditTime : 2021-04-02 12:59:35
 # @Description  : 启动入口
 '''
 
@@ -69,10 +69,8 @@ class Pi_2FA(object):
 
     def none_mode(self):
         self.Show = not self.Show
-        if self.Show:
-            self.count_2fa = 3
-            self.Minute = -1
-            
+        self.count_2fa = 3 if self.Show else 0
+        self.Minute = -1 
 
     def update_screen(self):
         self.Ready = False
