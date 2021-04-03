@@ -2,7 +2,7 @@
 # @Author       : Chr_
 # @Date         : 2021-03-30 17:04:42
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-04-01 23:10:19
+# @LastEditTime : 2021-04-03 23:01:07
 # @Description  : 令牌生成器
 '''
 
@@ -16,29 +16,23 @@ import struct
 def get_time()->int:
     return int(time() / 30)
 
-def get_steam_auth_code(secret: str, time: int) -> str:
+def get_steam_auth_code(secret: str, t: int=None) -> str:
     '''
     生成令牌
     '''
-    def bytes_to_int(bytes):
-        result = 0
-        for b in bytes:
-            result = result * 256 + int(b)
-        return result
-
     try:
-        t = time.to_bytes(8, 'big')
+        if not t:
+            t = int(time()/30)
+        msg = struct.pack(">Q", t)
         key = b64decode(secret)
-        h = hmac.new(key, t, hashlib.sha1)
-        signature = list(h.digest())
-        start = signature[19] & 0xf
-        fc32 = bytes_to_int(signature[start:start + 4])
-        fc32 &= 0x7FFFFFFF
-        fullcode = list('23456789BCDFGHJKMNPQRTVWXY')
+        mac = hmac.new(key, msg, hashlib.sha1).digest()
+        offset = mac[-1] & 0x0f
+        binary = struct.unpack('>L', mac[offset:offset+4])[0] & 0x7fffffff
+        codestr = list('23456789BCDFGHJKMNPQRTVWXY')
         chars = []
-        for i in range(5):
-            chars.append(fullcode[fc32 % 26])
-            fc32 //= 26
+        for _ in range(5):
+            chars.append(codestr[binary % 26])
+            binary //= 26
         code = ''.join(chars)
     except Exception as e:
         print(e)
@@ -46,14 +40,16 @@ def get_steam_auth_code(secret: str, time: int) -> str:
     return code
 
  
-def get_totp_auth_code(secret:str,time:int):
+def get_totp_auth_code(secret:str,t:int=None):
     try:
+        if not t:
+            t = int(time() / 30)
         key = b32decode(secret)
-        msg = struct.pack(">Q", time)
+        msg = struct.pack(">Q", t)
         mac = hmac.new(key, msg, hashlib.sha1).digest()
         offset = mac[-1] & 0x0f
         binary = struct.unpack('>L', mac[offset:offset+4])[0] & 0x7fffffff
-        code= str(binary)[-6:].zfill(6)
+        code = str(binary)[-6:].zfill(6)
     except Exception as e:
         print(e)
         code = 'ERROR'
