@@ -2,7 +2,7 @@
 # @Author       : Chr_
 # @Date         : 2021-03-30 17:04:24
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-04-03 00:26:15
+# @LastEditTime : 2021-04-09 19:56:43
 # @Description  : 图片生成器
 '''
 
@@ -36,6 +36,7 @@ FONT_ICO = ImageFont.truetype(
 
 FONT_CLOCK = ImageFont.truetype(path.join('font', 'hartland.ttf'), 50)
 FONT_DATE = ImageFont.truetype(path.join('font', 'hartland.ttf'), 23)
+FONT_APM = ImageFont.truetype(path.join('font', 'sarasa-fixed-sc-regular.ttf'), 13)
 FONT_TIPS = ImageFont.truetype(
     path.join('font', 'sarasa-fixed-sc-regular.ttf'), 13)
 
@@ -128,15 +129,28 @@ def generate_2fa_img(data: List[Tuple[str, str]], page: Tuple[int, int] = (1, 1)
         img = Image.new('L', (CLOCK_W, CLOCK_H), 0xff)
         draw = ImageDraw.Draw(img)
 
-        time_str = time.strftime("%H:%M", time.localtime())
-        date_str = time.strftime("%Y-%m-%d", time.localtime())
+        t=time.localtime()
+        time_str = time.strftime("%I:%M", t)
+        date_str = time.strftime("%Y-%m-%d", t)
+        is_am = time.strftime("%p",t)=='AM'
+        apm_str ='上午'if is_am  else '下午'
 
         # 画时钟
         wc, hc = FONT_CLOCK.getsize(time_str)
         wd, hd = FONT_DATE.getsize(date_str)
-        draw.text(((CLOCK_W-wc)/2+3, 10), time_str, font=FONT_CLOCK, fill=0x00)
-        draw.text(((CLOCK_W-wd)/2+3, 65), date_str, font=FONT_DATE, fill=0x00)
+        wp, hp = FONT_APM.getsize(apm_str)
+        
+        draw.text(((CLOCK_W-wc)/2+3, 15), time_str, font=FONT_CLOCK, fill=0x00)
+        draw.text(((CLOCK_W-wd)/2+3, 70), date_str, font=FONT_DATE, fill=0x00)
 
+        # 画上下午
+        if is_am:
+            x=(CLOCK_W-wd)/2+1
+        else:
+            x=(CLOCK_W-wd)/2+wd-wp-1
+        draw.text((x, 8), apm_str, font=FONT_APM, fill=0x00)
+
+        # 画提示
         for i, tip in enumerate(tips, 0):
             wt, ht = FONT_TIPS.getsize(tip)
             draw.text(((CLOCK_W-wt)/2, 110+(ht+5)*i),
@@ -164,7 +178,7 @@ def generate_2fa_img(data: List[Tuple[str, str]], page: Tuple[int, int] = (1, 1)
     img_clock = draw_clock()
     full_img.paste(img_clock, (ICON_W+CODE_W, 0))
 
-    with open('o.png', 'wb') as f:
-        full_img.save(f, 'png')
+    # with open('o.png', 'wb') as f:
+    #     full_img.save(f, 'png')
 
     return full_img
